@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Gallery } from './ImageGallery.styled';
 
-export const ImageGallery = ({ gallery, openModal }) => (
-  <Gallery>
-    {gallery.map(({ id, webformatURL, tags }) => (
+export const ImageGallery = ({ gallery, openModal }) => {
+  const renderGallery = () =>
+    gallery.map(({ id, webformatURL, tags }) => (
       <ImageGalleryItem
         key={id}
         webformatURL={webformatURL}
         tags={tags}
         openModal={() => openModal(id)}
-      ></ImageGalleryItem>
-    ))}
-  </Gallery>
-);
+      />
+    ));
+  return <Gallery>{gallery ? renderGallery() : null}</Gallery>;
+};
 
 ImageGallery.propTypes = {
   gallery: PropTypes.arrayOf(

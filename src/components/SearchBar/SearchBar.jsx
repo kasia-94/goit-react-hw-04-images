@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
 import { IoMdSearch } from 'react-icons/io';
 import {
   SearchBarHeader,
@@ -8,47 +8,47 @@ import {
   SearchFormLabel,
   SearchFormInput,
 } from './SearchBar.styled';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export class SearchBar extends Component {
-  state = {
-    inputName: '',
-  };
+export function SearchBar({ onSubmit }) {
+  const [inputName, setInputName] = useState('');
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (this.state.inputName.trim() === '') {
-      return alert('Please, I need to know what you are looking for!');
+    if (inputName.trim() === '') {
+      return toast.warning('Please, I need to know what you are looking for!', {
+        theme: 'colored',
+      });
     }
-    this.props.onSubmit(this.state.inputName);
-    this.setState({ inputName: '' });
-  };
-  handleChange = e => {
-    const { value } = e.target;
-    this.setState({ inputName: value });
+    onSubmit(inputName);
+    setInputName('');
   };
 
-  render() {
-    return (
-      <SearchBarHeader>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchFormButton type="submit">
-            <IoMdSearch style={{ width: 30, height: 30 }} />
-            <SearchFormLabel>Search</SearchFormLabel>
-          </SearchFormButton>
+  const handleChange = e => {
+    setInputName(e.target.value.toLowerCase());
+  };
 
-          <SearchFormInput
-            type="text"
-            autocomplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-            name="inputName"
-            value={this.state.inputName}
-          />
-        </SearchForm>
-      </SearchBarHeader>
-    );
-  }
+  return (
+    <SearchBarHeader>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchFormButton type="submit">
+          <IoMdSearch style={{ width: 30, height: 30 }} />
+          <SearchFormLabel>Search</SearchFormLabel>
+        </SearchFormButton>
+
+        <SearchFormInput
+          type="text"
+          autocomplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+          name="inputName"
+          value={inputName}
+        />
+      </SearchForm>
+    </SearchBarHeader>
+  );
 }
 
 SearchBar.propTypes = {
